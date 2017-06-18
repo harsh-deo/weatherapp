@@ -1,1 +1,128 @@
+<!DOCTYPE html>
+<html>
 
+<head>
+  <meta charset="utf-8">
+  <title>Weather App</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+  <div class="container-fluid">
+
+    <div id="map">
+    </div>
+    <div class="latlng" id="latlng">
+    </div>
+    <div class="" id="city">
+    </div>
+    <div class="row">
+      <div class="col-md-1" id="temperature">
+      </div>
+      <div class="col-md-1" id="celcius" >
+        <button type="button" onclick="getCelcius()" name="button">In Celcius</button>
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+  <script>
+    var map, infoWindow;
+    var disp = "";
+    var lati = "";
+    var long = "";
+    var city = "";
+    var temp = "";
+    var geolocation ="";
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {
+          lat: -34.397,
+          lng: 150.644
+        },
+        zoom: 6
+      });
+      infoWindow = new google.maps.InfoWindow;
+
+      // Try HTML5 geolocation.
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          lati = position.coords.latitude;
+          long = position.coords.longitude;
+          getWeather();
+          getCity();
+          infoWindow.setPosition(pos);
+          infoWindow.setContent('Location found.');
+          infoWindow.open(map);
+          map.setCenter(pos);
+        }, function() {
+          handleLocationError(true, infoWindow, map.getCenter());
+        });
+      } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, infoWindow, map.getCenter());
+      }
+
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+          'Error: The Geolocation service failed.' :
+          'Error: Your browser doesn\'t support geolocation.');
+        infoWindow.open(map);
+      }
+    }
+
+
+    function dispLocation() {
+      disp += "Lat" + lati + "Long" + long ;
+      $("#latlng").html(disp);
+    }
+
+
+  function getWeather() { //funtion to fetch data from website
+
+    $.ajax({
+        url: 'https://api.darksky.net/forecast/352e29016b60d638dde8a110d5dbdeb6/'+lati+','+long,
+        success: function(r) {
+
+          temp +=r.currently.apparentTemperature + "F";
+          $("#temperature").html(temp);
+        }
+        });
+    }
+
+    function getCelcius() {
+          tempc= (temp -32)*.55;
+          $("#temperature").html(tempc);
+    }
+
+  function getCity()
+    {
+        geolocation += lati+','+long;
+        // debugger;
+        $.ajax({
+            url: 'http://maps.googleapis.com/maps/api/geocode/json?latlng='+geolocation+'&sensor=false',
+            success: function(s) {
+              city=s.results[4].formatted_address;
+              // debugger;
+              $("#city").html(city);
+            }
+            });
+    }
+
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfBF2ntCFJYhgaNVbU2QgG8sUiFYbk4u4&callback=initMap"></script>
+
+</body>
+
+</html>
