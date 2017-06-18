@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 </head>
 
 <body>
@@ -21,16 +22,12 @@
     <div class="row">
       <div class="col-md-1" id="temperature">
       </div>
-      <div class="col-md-1" id="celcius" >
-        <button type="button" onclick="getCelcius()" name="button">In Celcius</button>
+      <div class="col-md-offset-1" id="celcius" >
+        <button type="button" onclick="getCelcius()" name="button">In `C</button>
       </div>
 
     </div>
-
-
   </div>
-
-
   <script>
     var map, infoWindow;
     var disp = "";
@@ -38,6 +35,8 @@
     var long = "";
     var city = "";
     var temp = "";
+    var tempc = "";
+    var temp1 ="";
     var geolocation ="";
     function initMap() {
       map = new google.maps.Map(document.getElementById('map'), {
@@ -72,7 +71,6 @@
         handleLocationError(false, infoWindow, map.getCenter());
       }
 
-
       function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
         infoWindow.setContent(browserHasGeolocation ?
@@ -94,15 +92,17 @@
     $.ajax({
         url: 'https://api.darksky.net/forecast/352e29016b60d638dde8a110d5dbdeb6/'+lati+','+long,
         success: function(r) {
-
-          temp +=r.currently.apparentTemperature + "F";
+          temp1+=r.currently.apparentTemperature;
+          temp +=temp1 + "F";
+          // debugger;
           $("#temperature").html(temp);
         }
         });
     }
 
     function getCelcius() {
-          tempc= (temp -32)*.55;
+          tempc= (temp1 - 32)*.55;
+          debugger;
           $("#temperature").html(tempc);
     }
 

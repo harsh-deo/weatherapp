@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Togglr</title>
+  <script type="text/javascript">
+    function bindButtons() {
+      var buttons = $('#buttons button');
+
+      buttons.on('click', function(e) {
+        var $this = $(this);
+        buttons.removeClass('selected');
+        if ($this.attr('id') == 'yes') {
+          var el = $('#no'),
+            val = true;
+          $this.removeClass('disabled');
+          $this.addClass('selected');
+          el.addClass('disabled');
+        }
+        if ($this.attr('id') == 'no') {
+          var el = $('#yes'),
+            val = false;
+          $this.removeClass('disabled');
+          $this.addClass('selected');
+          el.addClass('disabled');
+        }
+        //do something with val
+      })
+    }
+    bindButtons();
+  </script>
+</head>
+
+<body>
+  <div id="buttons">
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
+  </div>
+</body>
+
+</html>
